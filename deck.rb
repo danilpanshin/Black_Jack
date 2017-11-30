@@ -35,59 +35,63 @@ class Deck
 
   def user_points
     sum = 0
-    @pic_sum = 0
-    @ace_sum = 0
+    pic_sum = 0
+    ace_sum = 0
     @user_sum = 0
     numbers = @user_cards.select  { |x| x =~ /[0-9]/ }
     numbers.map! {|x| x.to_i}
     numbers.each {|x| sum += x }
-    @pictures = @user_cards.select { |x| x =~ /[JQK]/ }
-    @pictures.each {|x| @pic_sum += 10}
+    pictures = @user_cards.select { |x| x =~ /[JQK]/ }
+    pictures.each {|x| pic_sum += 10}
 
 
 
-    @aces = @user_cards.select {|x| x =~ /[A]/}
-    @aces.each { |x| @ace_sum += 11 }
+    aces = @user_cards.select {|x| x =~ /[A]/}
 
-    @user_sum = @pic_sum + sum + @ace_sum
+    @user_sum = pic_sum + sum
 
-   # if @user_sum >= 21
-   #   @user_sum -= 10
-   # elsif @user_sum > 21 || @aces.length == 2
-   #   @ace_sum -= 20
-  #  elsif @user_sum > 21 || @aces.length == 3
-    #  @ace_sum -= 30
-
-  #  end
+    aces.each { |x| ace_sum = 11 if @user_sum <= 10 }
+    aces.each { |x| ace_sum = 1 if @user_sum > 10 }
+    if aces.length == 2
+      ace_sum = 12
+    elsif aces.length == 3
+      ace_sum = 13
+    end
 
 
-      #if aces.empty?
-    #  @user_sum = @pic_sum + sum
-    #elsif @aces.length == 2 || @user_sum <= 9
-    #  @ace_sum = 12
-    #elsif @aces.length == 3
-    #  @ace_sum = 13
-   # elsif @user_sum <= 10 || aces.length == 1
-   #   @ace_sum = 11
-    #elsif @user_sum > 10 || aces.length == 1
-    #  @ace_sum = 1
-   # end
 
-
-    #@user_sum += @ace_sum
-
+    @user_sum += ace_sum
 
   end
 
   def dealer_points
     sum = 0
     pic_sum = 0
+    ace_sum = 0
+    @dealer_sum = 0
     numbers = @dealer_cards.select  { |x| x =~ /[0-9]/ }
     numbers.map! {|x| x.to_i}
     numbers.each {|x| sum += x }
-    pictures = @dealer_cards.select { |x| x =~ /[JQKA]/ }
+    pictures = @dealer_cards.select { |x| x =~ /[JQK]/ }
     pictures.each {|x| pic_sum += 10}
+
+
+
+    aces = @dealer_cards.select {|x| x =~ /[A]/}
+
     @dealer_sum = pic_sum + sum
+
+    aces.each { |x| ace_sum = 11 if @dealer_sum <= 10 }
+    aces.each { |x| ace_sum = 1 if @dealer_sum > 10 }
+    if aces.length == 2
+      ace_sum = 12
+    elsif aces.length == 3
+      ace_sum = 13
+    end
+
+
+
+    @dealer_sum += ace_sum
   end
 
 end

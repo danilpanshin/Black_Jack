@@ -1,2 +1,10 @@
+class Menu
+
+require_relative 'deck'
+require_relative 'bank'
+
+
 puts "Enter your name"
-@name = gets.chomp
+@user_name = gets.chomp
+
+

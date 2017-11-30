@@ -1,4 +1,7 @@
 class Bank
+
+  attr_accessor :user_bank, :dealer_bank
+
   def initialize
     @user_bank = 100
     @dealer_bank = 100

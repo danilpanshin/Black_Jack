@@ -3,8 +3,8 @@ class Bank
   attr_accessor :user_bank, :dealer_bank
 
   def initialize
-    @user_bank = 100
-    @dealer_bank = 100
+    @user_bank = 20
+    @dealer_bank = 20
   end
 
   def bet
@@ -19,5 +19,11 @@ class Bank
 
   def dealer_win
     @dealer_bank += @bank
+  end
+
+  def draw
+    @bank = 0
+    @user_bank += 10
+    @dealer_bank += 10
   end
 end

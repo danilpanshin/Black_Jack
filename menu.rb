@@ -7,18 +7,28 @@ class Menu
 
 
   def initialize
-    loop do
-      puts "Enter your name"
-      @user_name = gets.chomp
+    puts "Enter your name"
+    @user_name = gets.chomp
+    @b = Bank.new
+    menu
+  end
+
+  def menu
+    #loop do
+
       @deck = Deck.new
       @deck.give_out_cards
-      puts "your cards #{@deck.user_cards}"
+      puts "#{@user_name} cards #{@deck.user_cards}"
 
       @deck.user_points
 
-      puts "your points #{@deck.user_sum}"
-      @b = Bank.new
+      puts "#{@user_name} points #{@deck.user_sum}"
+
+      puts "dealer cards [* *]"
+
       @b.bet
+
+
 
       puts "Take card - 1
             Open cards - 2
@@ -35,17 +45,20 @@ class Menu
 
       end
 
-      break if @user_name == ""
-    end
+    puts "once more? yes/no"
+    more = gets.chomp
+
+    menu if more == 'yes'
+
   end
 
   def take
     @deck.user_take_card
-    puts "your cards #{@deck.user_cards}"
+    #puts "your cards #{@deck.user_cards}"
 
     @deck.user_points
 
-    puts "your points #{@deck.user_sum}"
+   # puts "your points #{@deck.user_sum}"
 
     if @deck.dealer_points < 18
       deal_take
@@ -58,11 +71,11 @@ class Menu
   end
 
   def open
-    puts "your cards #{@deck.user_cards}"
+    puts "#{@user_name} cards: #{@deck.user_cards}"
 
     @deck.user_points
 
-    puts "your points #{@deck.user_sum}"
+    puts "#{@user_name} points: #{@deck.user_sum}"
 
     puts "dealer cards #{@deck.dealer_cards}"
 
@@ -70,7 +83,23 @@ class Menu
 
     puts "dealer points #{@deck.dealer_sum}"
 
-    if @deck.user_points > @deck.dealer_points
+    if @deck.user_points > 21 && @deck.dealer_points > 21
+      @b.draw
+      puts "it's draw"
+      puts "your bank #{@b.user_bank}"
+      puts "dealer bank #{@b.dealer_bank}"
+
+    elsif @deck.user_points > 21
+      @b.dealer_win
+      puts "dealer win"
+      puts "your bank #{@b.user_bank}"
+      puts "dealer bank #{@b.dealer_bank}"
+    elsif @deck.dealer_points > 21
+      @b.user_win
+      puts "you win"
+      puts "your bank #{@b.user_bank}"
+      puts "dealer bank #{@b.dealer_bank}"
+    elsif @deck.user_points > @deck.dealer_points
       @b.user_win
       puts "you win"
       puts "your bank #{@b.user_bank}"
@@ -80,11 +109,33 @@ class Menu
       puts "dealer win"
       puts "your bank #{@b.user_bank}"
       puts "dealer bank #{@b.dealer_bank}"
-    else
+
+    elsif @deck.dealer_points == @deck.user_points
+      @b.draw
       puts "it's draw"
       puts "your bank #{@b.user_bank}"
       puts "dealer bank #{@b.dealer_bank}"
     end
+
+    if @b.user_bank = 0
+      puts "Game over. #{@user_name} loose. Start new game? yes/no"
+      start = gets.chomp
+      if start == "yes"
+        menu
+      elsif start == "no"
+        abort
+      end
+    elsif @b.dealer_bank = 0
+      puts "Game over. Dealer loose. Start new game? yes/no"
+      start = gets.chomp
+      if start == "yes"
+        menu
+      elsif start == "no"
+        abort
+      end
+    end
+
+
   end
 
   def deal_take
@@ -92,16 +143,39 @@ class Menu
   end
 
   def skip
-    puts "your cards #{@deck.user_cards}"
+    puts "#{@user_name} cards #{@deck.user_cards}"
 
     @deck.user_points
 
-    puts "your points #{@deck.user_sum}"
+    puts "#{@user_name} points #{@deck.user_sum}"
 
     if @deck.dealer_points < 18
       deal_take
     end
+
+    if @deck.dealer_cards.length == 2
+      puts "dealer cards [* *]"
+    elsif @deck.dealer_cards.length == 3
+      puts "dealer cards [* * *]"
+    end
+    puts "Take card - 1
+          Open cards - 2
+          Skip a move - 3"
+    choose = gets.chomp.to_i
+
+    case choose
+      when 1
+        take
+      when 2
+        open
+      when 3
+        skip
+
+
+    #menu
+    end
   end
+
 
 end
 
